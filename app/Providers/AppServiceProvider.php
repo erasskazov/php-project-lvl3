@@ -17,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
         //
     }
 
-    /**
+    /**s
      * Bootstrap any application services.
      *
      * @return void
@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
         //
         if(env('APP_ENV') !== 'local')
         {
-            $url->forceSchema('https');
+            $url->forceScheme('https');
         }
         
     }
