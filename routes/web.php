@@ -25,6 +25,7 @@ Route::get('/', function (Request $request) {
 
 Route::post('/', function (Request $request) {
     $urlData = $request->input('url');
+    $urlData['created_at'] = Carbon::now();
 
     $validator = Validator::make(
         $urlData,
@@ -38,7 +39,9 @@ Route::post('/', function (Request $request) {
                     ->withInput($request->input());
     }
 
-    $id = DB::table('urls')->insertGetId($urlData);
+    $tableUrlId = DB::table('urls')->where('name', $urlData['name'])->value('id');
+    $id = $tableUrlId ? $tableUrlId : DB::table('urls')->insertGetId($urlData);
+
     return redirect(route('urls.show', compact('id')));
 })->name('urls.store');
 
