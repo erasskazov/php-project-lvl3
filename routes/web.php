@@ -40,7 +40,16 @@ Route::post('/', function (Request $request) {
     }
 
     $tableUrlId = DB::table('urls')->where('name', $urlData['name'])->value('id');
-    $id = $tableUrlId ? $tableUrlId : DB::table('urls')->insertGetId($urlData);
+
+    if ($tableUrlId) {
+        $id = $tableUrlId;
+        $flashMessage = 'Страница уже существует';
+    } else {
+        $id = $tableUrlId ? $tableUrlId : DB::table('urls')->insertGetId($urlData);
+        $flashMessage = 'Страница успешно добавлена';
+    }
+    
+    session()->flash('success', $flashMessage);
 
     return redirect(route('urls.show', compact('id')));
 })->name('urls.store');
