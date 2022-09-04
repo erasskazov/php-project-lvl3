@@ -45,7 +45,7 @@ Route::post('/', function (Request $request) {
         $id = $tableUrlId;
         $flashMessage = 'Страница уже существует';
     } else {
-        $id = $tableUrlId ? $tableUrlId : DB::table('urls')->insertGetId($urlData);
+        $id = DB::table('urls')->insertGetId($urlData);
         $flashMessage = 'Страница успешно добавлена';
     }
 
@@ -54,10 +54,12 @@ Route::post('/', function (Request $request) {
     return redirect(route('urls.show', compact('id')));
 })->name('urls.store');
 
+
 Route::get('urls', function () {
     $urls = DB::table('urls')->paginate(15);
     return view('url.index', compact('urls'));
 })->name('urls.index');
+
 
 Route::get('urls/{id}', function ($id) {
     $url = DB::table('urls')->find($id);
