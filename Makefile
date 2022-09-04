@@ -1,25 +1,17 @@
 start:
-	php artisan serve
-
-start-frontend:
-	npm run dev
+	php artisan serve --host 0.0.0.0
 
 setup:
 	composer install
-	cp -n .env.example .env
+	cp -n .env.example .env || true
 	php artisan key:gen --ansi
 	touch database/database.sqlite
 	php artisan migrate
-	php artisan db:seed
-	npm ci
-	npm run build
-	make ide-helper
-
-watch:
-	npm run watch
+	npm install
+	npm run dev
 
 migrate:
 	php artisan migrate
 
 lint:
-	composer phpcs
+	composer exec phpcs
