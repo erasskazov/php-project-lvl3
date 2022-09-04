@@ -48,18 +48,16 @@ Route::post('/', function (Request $request) {
         $id = $tableUrlId ? $tableUrlId : DB::table('urls')->insertGetId($urlData);
         $flashMessage = 'Страница успешно добавлена';
     }
-    
+
     session()->flash('success', $flashMessage);
 
     return redirect(route('urls.show', compact('id')));
 })->name('urls.store');
 
-
 Route::get('urls', function () {
     $urls = DB::table('urls')->paginate(15);
     return view('url.index', compact('urls'));
 })->name('urls.index');
-
 
 Route::get('urls/{id}', function ($id) {
     $url = DB::table('urls')->find($id);
