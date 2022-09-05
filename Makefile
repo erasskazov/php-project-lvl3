@@ -11,7 +11,10 @@ setup:
 	npm run build
 
 migrate:
-	php artisan migrate
+	php artisan migrate --seed
 
 lint:
 	composer exec phpcs
+
+test:
+	php artisan test
