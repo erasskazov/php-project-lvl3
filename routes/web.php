@@ -64,7 +64,6 @@ Route::get('urls', function () {
             ->orderByDesc('created_at')
             ->value('created_at');
     }
-    var_dump($lastChecks);
     return view('url.index', compact('urls', 'lastChecks'));
 })->name('urls.index');
 
