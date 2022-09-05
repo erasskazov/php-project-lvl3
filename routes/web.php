@@ -57,14 +57,37 @@ Route::post('/', function (Request $request) {
 
 Route::get('urls', function () {
     $urls = DB::table('urls')->paginate(15);
-    return view('url.index', compact('urls'));
+    $lastChecks = [];
+    foreach ($urls as $url) {
+        $lastChecks[$url->id] = DB::table('url_checks')
+            ->where('url_id', '=', $url->id)
+            ->orderByDesc('created_at')
+            ->value('created_at');
+    }
+    var_dump($lastChecks);
+    return view('url.index', compact('urls', 'lastChecks'));
 })->name('urls.index');
+
+
+Route::post('urls/{id}/checks', function ($id) {
+    $urlCheckData = [
+        'url_id' => $id,
+        'created_at' => Carbon::now()
+    ];
+    DB::table('url_checks')->insert($urlCheckData);
+    session()->flash('success', 'Страница успешно проверена');
+    return redirect(route('urls.show', $id));
+})->name('urls.checks.store');
 
 
 Route::get('urls/{id}', function ($id) {
     $url = DB::table('urls')->find($id);
+    $url_checks = DB::table('url_checks')
+        ->where('url_id', '=', $id)
+        ->get()
+        ->sortDesc();
     if ($url) {
-        return view('url.show', compact('url'));
+        return view('url.show', compact('url', 'url_checks'));
     }
     abort(404);
 })->name('urls.show');

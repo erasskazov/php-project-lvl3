@@ -20,4 +20,32 @@
             </tbody>
         </table>
     </div>
-@endsection
+    <h2 class="mt-5 mb-3">Проверки</h2>
+    <form action="{{ route('urls.checks.store', $url->id) }}" method="post">
+        @csrf
+        <input type="submit" class="btn btn-primary" value="Запустить проверку">
+    </form>
+    <table class="table table-bordered table-hover text-nowrap mt-5">
+        <tbody>
+            <tr>
+                <th>ID</th>
+                <th>Код ответа</th>
+                <th>h1</th>
+                <th>title</th>
+                <th>description</th>
+                <th>Дата создания</th>
+            </tr>
+            
+            @foreach ($url_checks as $url_check)
+                <tr>
+                    <th>{{ $url_check->id }}</th>
+                    <th>{{ $url_check->status_code }}</th>
+                    <th>{{ $url_check->h1 }}</th>
+                    <th>{{ $url_check->title }}</th>
+                    <th>{{ $url_check->description }}</th>
+                    <th>{{ $url_check->created_at }}</th>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+@endsection<tr></tr>
