@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -61,16 +62,18 @@ Route::get('urls', function () {
     foreach ($urls as $url) {
         $lastChecks[$url->id] = DB::table('url_checks')
             ->where('url_id', '=', $url->id)
-            ->orderByDesc('created_at')
-            ->value('created_at');
+            ->latest()
+            ->first();
     }
     return view('url.index', compact('urls', 'lastChecks'));
 })->name('urls.index');
 
 
 Route::post('urls/{id}/checks', function ($id) {
+    $urlResponse = Http::get(DB::table('urls')->find($id)->name);
     $urlCheckData = [
         'url_id' => $id,
+        'status_code' => $urlResponse->status(),
         'created_at' => Carbon::now()
     ];
     DB::table('url_checks')->insert($urlCheckData);
@@ -81,12 +84,12 @@ Route::post('urls/{id}/checks', function ($id) {
 
 Route::get('urls/{id}', function ($id) {
     $url = DB::table('urls')->find($id);
-    $url_checks = DB::table('url_checks')
+    $urlChecks = DB::table('url_checks')
         ->where('url_id', '=', $id)
         ->get()
         ->sortDesc();
     if ($url) {
-        return view('url.show', compact('url', 'url_checks'));
+        return view('url.show', compact('url', 'urlChecks'));
     }
     abort(404);
 })->name('urls.show');

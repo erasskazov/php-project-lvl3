@@ -36,14 +36,14 @@
                 <th>Дата создания</th>
             </tr>
             
-            @foreach ($url_checks as $url_check)
+            @foreach ($urlChecks as $urlCheck)
                 <tr>
-                    <th>{{ $url_check->id }}</th>
-                    <th>{{ $url_check->status_code }}</th>
-                    <th>{{ $url_check->h1 }}</th>
-                    <th>{{ $url_check->title }}</th>
-                    <th>{{ $url_check->description }}</th>
-                    <th>{{ $url_check->created_at }}</th>
+                    <th>{{ $urlCheck->id }}</th>
+                    <th>{{ $urlCheck->status_code }}</th>
+                    <th>{{ $urlCheck->h1 }}</th>
+                    <th>{{ $urlCheck->title }}</th>
+                    <th>{{ $urlCheck->description }}</th>
+                    <th>{{ $urlCheck->created_at }}</th>
                 </tr>
             @endforeach
         </tbody>
