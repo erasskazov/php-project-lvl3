@@ -18,3 +18,6 @@ lint:
 
 test:
 	php artisan test
+
+test-coverage:
+	composer exec --verbose phpunit tests -- --coverage-clover reports/coverage/clover.xml
