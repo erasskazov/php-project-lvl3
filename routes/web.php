@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use DiDom\Document;
@@ -38,9 +39,7 @@ Route::post('urls', function (Request $request) {
     );
 
     if ($validator->fails()) {
-        return redirect(route('homepage'))
-                    ->withErrors($validator->errors())
-                    ->withInput();
+        return Redirect::back()->withErrors($validator)->withInput($request->all());
     }
 
     $tableUrlId = DB::table('urls')->where('name', $urlData['name'])->value('id');
