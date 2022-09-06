@@ -39,7 +39,7 @@ Route::post('urls', function (Request $request) {
     );
 
     if ($validator->fails()) {
-        return Redirect::back()->withErrors($validator)->withInput($request->all());
+        return redirect()->back()->withErrors($validator)->withInput($request->all());
     }
 
     $tableUrlId = DB::table('urls')->where('name', $urlData['name'])->value('id');
