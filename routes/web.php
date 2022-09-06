@@ -40,7 +40,7 @@ Route::post('urls', function (Request $request) {
     if ($validator->fails()) {
         return redirect(route('homepage'))
                     ->withErrors($validator)
-                    ->withInput($request->input());
+                    ->withInput();
     }
 
     $tableUrlId = DB::table('urls')->where('name', $urlData['name'])->value('id');
@@ -79,7 +79,7 @@ Route::post('urls/{id}/checks', function ($id) {
         $urlResponse = Http::timeout(3)->retry(3, 100)->get($urlName);
     } catch (ConnectionException | RequestException $e) {
         session()->flash('error', 'Сервер не доступен');
-        return redirect()->back();
+        return redirect(route('urls.show', $id));
     }
 
     $status = $urlResponse->status();
