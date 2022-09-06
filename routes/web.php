@@ -61,13 +61,12 @@ Route::post('urls', function (Request $request) {
 
 Route::get('urls', function () {
     $urls = DB::table('urls')->paginate(15);
-    $lastChecks = [];
-    foreach ($urls->all() as $url) {
-        $lastChecks[$url->id] = DB::table('url_checks')
-            ->where('url_id', '=', $url->id)
-            ->latest()
-            ->first();
-    }
+    $lastChecks = $urls->map(function ($url) {
+        return [$url->id => DB::table('url_checks')
+        ->where('url_id', '=', $url->id)
+        ->latest()
+        ->first()];
+    });
     return view('url.index', compact('urls', 'lastChecks'));
 })->name('urls.index');
 
