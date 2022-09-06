@@ -27,7 +27,7 @@ Route::get('/', function (Request $request) {
 })->name('homepage');
 
 
-Route::post('/', function (Request $request) {
+Route::post('urls', function (Request $request) {
     $urlData = $request->input('url');
     $urlData['created_at'] = Carbon::now();
 
