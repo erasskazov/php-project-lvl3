@@ -4,8 +4,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\RequestException;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use DiDom\Document;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,14 +73,33 @@ Route::get('urls', function () {
 
 
 Route::post('urls/{id}/checks', function ($id) {
-    $urlResponse = Http::get(DB::table('urls')->find($id)->name);
+    $urlName = DB::table('urls')->find($id)->name;
+
+    try {
+        $urlResponse = Http::timeout(3)->retry(3, 100)->get($urlName);
+    } catch (ConnectionException | RequestException $e) {
+        session()->flash('error', 'Сервер не доступен');
+        return redirect()->back();
+    }
+
+    $status = $urlResponse->status();
+    $parsedHtml = new Document($urlResponse->body());
+    $title = optional($parsedHtml->first('title'))->text();
+    $h1 = optional($parsedHtml->first('h1'))->text();
+    $description = optional($parsedHtml->first('[name="description"]'))->getAttribute('content');
+
     $urlCheckData = [
         'url_id' => $id,
-        'status_code' => $urlResponse->status(),
+        'title' => $title,
+        'h1' => $h1,
+        'description' => $description,
+        'status_code' => $status,
         'created_at' => Carbon::now()
     ];
+
     DB::table('url_checks')->insert($urlCheckData);
     session()->flash('success', 'Страница успешно проверена');
+
     return redirect(route('urls.show', $id));
 })->name('urls.checks.store');
 

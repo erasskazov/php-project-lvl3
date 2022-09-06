@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Client\Request;
 use Tests\TestCase;
 
 class UrlTest extends TestCase
@@ -23,7 +24,9 @@ class UrlTest extends TestCase
         parent::setUp();
         $this->urlData = ['name' => 'https://test.com'];
         $this->urlId = DB::table('urls')->insertGetId($this->urlData);
-        Http::fake();
+        Http::fake(function (Request $request) {
+            return Http::response('<html>fake html</html>', 200);
+        });
     }
 
     public function testHomepage()
