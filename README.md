@@ -2,7 +2,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/89138ecaa6fa90631dd2/maintainability)](https://codeclimate.com/github/erasskazov/php-project-lvl3/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/89138ecaa6fa90631dd2/test_coverage)](https://codeclimate.com/github/erasskazov/php-project-lvl3/test_coverage)
 
-###About
+### About
 
 Page Analyzer is a web application based on the Laravel framework. The application analyzes the presence of tags required for SEO optimization
 
