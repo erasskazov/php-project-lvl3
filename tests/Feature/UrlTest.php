@@ -16,8 +16,8 @@ class UrlTest extends TestCase
      * @return void
      */
 
-    protected $urlId;
-    protected $urlData;
+    protected int $urlId;
+    protected array $urlData;
 
     protected function setUp(): void
     {

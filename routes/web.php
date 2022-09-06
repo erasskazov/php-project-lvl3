@@ -39,7 +39,7 @@ Route::post('urls', function (Request $request) {
 
     if ($validator->fails()) {
         return redirect(route('homepage'))
-                    ->withErrors($validator)
+                    ->withErrors($validator->errors())
                     ->withInput();
     }
 
@@ -62,7 +62,7 @@ Route::post('urls', function (Request $request) {
 Route::get('urls', function () {
     $urls = DB::table('urls')->paginate(15);
     $lastChecks = [];
-    foreach ($urls as $url) {
+    foreach ($urls->all() as $url) {
         $lastChecks[$url->id] = DB::table('url_checks')
             ->where('url_id', '=', $url->id)
             ->latest()
